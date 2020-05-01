@@ -1,33 +1,43 @@
-import React from 'react';
-import { Formik } from 'formik';
-import Button from 'react-bootstrap/Button';
-import InputGroup from 'react-bootstrap/InputGroup';
-import FormControl from 'react-bootstrap/FormControl';
-import Container from 'react-bootstrap/Container';
+import React from "react";
+import axios from "axios";
+import { Formik } from "formik";
+import Button from "react-bootstrap/Button";
+import InputGroup from "react-bootstrap/InputGroup";
+import FormControl from "react-bootstrap/FormControl";
+import Container from "react-bootstrap/Container";
+import Spinner from "react-bootstrap/Spinner";
 
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 export const Messaging = () => {
-  const [ messages ] = React.useState([
-    { name: 'chidimo', message: 'Welcome to firebase messaging with React' },
-  ]);
+  const [messages, setMessages] = React.useState([]);
+  const [requesting, setRequesting] = React.useState(false);
+
+  React.useEffect(() => {
+    setRequesting(true);
+    axios.get("/messages").then((resp) => {
+      setMessages(resp.data.messages);
+      setRequesting(false);
+    });
+  }, []);
+
   return (
     <Container>
       <Formik
         initialValues={{
-          name: '',
-          message: '',
+          name: "",
+          message: "",
         }}
         onSubmit={(values, actions) => {
           setTimeout(() => {
             alert(JSON.stringify(values, null, 2));
             actions.setSubmitting(false);
-            toast.success('Submitted succesfully');
+            toast.success("Submitted succesfully");
           }, 1000);
         }}
       >
         {(prop) => {
-          const { handleSubmit, handleChange } = prop;
+          const { handleSubmit, handleChange, isSubmitting } = prop;
           return (
             <>
               <InputGroup className="mb-3">
@@ -36,7 +46,7 @@ export const Messaging = () => {
                 </InputGroup.Prepend>
                 <FormControl
                   placeholder="Enter your name"
-                  onChange={handleChange('name')}
+                  onChange={handleChange("name")}
                 />
               </InputGroup>
 
@@ -45,14 +55,27 @@ export const Messaging = () => {
                   <InputGroup.Text id="basic-addon1">Message</InputGroup.Text>
                 </InputGroup.Prepend>
                 <FormControl
-                  onChange={handleChange('message')}
+                  onChange={handleChange("message")}
                   placeholder="Enter a message"
                 />
               </InputGroup>
 
-              <Button variant="primary" onClick={() => handleSubmit()}>
-                Submit
-              </Button>
+              {isSubmitting ? (
+                <Button variant="primary" disabled>
+                  <Spinner
+                    as="span"
+                    size="sm"
+                    role="status"
+                    animation="grow"
+                    aria-hidden="true"
+                  />
+                  Loading...
+                </Button>
+              ) : (
+                <Button variant="primary" onClick={() => handleSubmit()}>
+                  Submit
+                </Button>
+              )}
             </>
           );
         }}
@@ -61,14 +84,22 @@ export const Messaging = () => {
       <div className="message-list">
         <h3>Messages</h3>
 
-        {messages.map((m, index) => {
-          const { name, message } = m;
-          return (
-            <div key={index}>
-              {name}: {message}
-            </div>
-          );
-        })}
+        {requesting ? (
+          <Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner>
+        ) : (
+          <>
+            {messages.map((m, index) => {
+              const { name, message } = m;
+              return (
+                <div key={index}>
+                  {name}: {message}
+                </div>
+              );
+            })}
+          </>
+        )}
       </div>
     </Container>
   );

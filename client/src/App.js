@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React, { Fragment } from 'react';
 
 import Row from 'react-bootstrap/Row';
@@ -10,6 +11,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import './App.scss';
 import { Messaging } from './Messaging';
+
+axios.defaults.baseURL = 'http://localhost:3001/v1';
 
 const App = () => {
   return (
