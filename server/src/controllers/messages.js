@@ -18,7 +18,7 @@ export const addMessage = async (req, res) => {
   const values = `'${name}', '${message}'`;
   try {
     const data = await messagesModel.insertWithReturn(columns, values);
-    const tokens = []
+    const tokens = [];
     const notificationData = {
       title: 'New message',
       body: message,

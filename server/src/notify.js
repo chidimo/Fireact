@@ -1,4 +1,3 @@
-
 import { messaging } from './firebaseInit';
 
 export const sendNotificationToClient = (tokens, data) => {

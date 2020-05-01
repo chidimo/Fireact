@@ -1,7 +1,6 @@
-
 import admin from 'firebase-admin';
 
-import { googleApplicationCredentials } from './settings'
+import { googleApplicationCredentials } from './settings';
 
 const serviceAccount = require(googleApplicationCredentials);
 
