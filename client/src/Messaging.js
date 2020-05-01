@@ -61,10 +61,10 @@ export const Messaging = () => {
       <div className="message-list">
         <h3>Messages</h3>
 
-        {messages.map((m) => {
-          const { _id, name, message } = m;
+        {messages.map((m, index) => {
+          const { name, message } = m;
           return (
-            <div key={_id}>
+            <div key={index}>
               {name}: {message}
             </div>
           );
