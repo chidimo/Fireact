@@ -1,28 +1,28 @@
-import React from "react";
-import { Formik } from "formik";
-import Button from "react-bootstrap/Button";
-import InputGroup from "react-bootstrap/InputGroup";
-import FormControl from "react-bootstrap/FormControl";
-import Container from "react-bootstrap/Container";
+import React from 'react';
+import { Formik } from 'formik';
+import Button from 'react-bootstrap/Button';
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
+import Container from 'react-bootstrap/Container';
 
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
 
 export const Messaging = () => {
-  const [messages] = React.useState([
-    { name: "chidimo", message: "Welcome to firebase messaging with React" },
+  const [ messages ] = React.useState([
+    { name: 'chidimo', message: 'Welcome to firebase messaging with React' },
   ]);
   return (
     <Container>
       <Formik
         initialValues={{
-          name: "",
-          message: "",
+          name: '',
+          message: '',
         }}
         onSubmit={(values, actions) => {
           setTimeout(() => {
             alert(JSON.stringify(values, null, 2));
             actions.setSubmitting(false);
-            toast.success("Submitted succesfully");
+            toast.success('Submitted succesfully');
           }, 1000);
         }}
       >
@@ -36,7 +36,7 @@ export const Messaging = () => {
                 </InputGroup.Prepend>
                 <FormControl
                   placeholder="Enter your name"
-                  onChange={handleChange("name")}
+                  onChange={handleChange('name')}
                 />
               </InputGroup>
 
@@ -45,7 +45,7 @@ export const Messaging = () => {
                   <InputGroup.Text id="basic-addon1">Message</InputGroup.Text>
                 </InputGroup.Prepend>
                 <FormControl
-                  onChange={handleChange("message")}
+                  onChange={handleChange('message')}
                   placeholder="Enter a message"
                 />
               </InputGroup>
