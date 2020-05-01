@@ -7,7 +7,7 @@ const serviceAccount = require(googleApplicationCredentials);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'your-database-url-here'
+  databaseURL: 'https://push-notifications-article.firebaseio.com',
 });
 
 export const messaging = admin.messaging();
