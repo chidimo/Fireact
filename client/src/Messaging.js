@@ -1,39 +1,56 @@
-import React from "react";
-import axios from "axios";
-import { Formik } from "formik";
-import Button from "react-bootstrap/Button";
-import InputGroup from "react-bootstrap/InputGroup";
-import FormControl from "react-bootstrap/FormControl";
-import Container from "react-bootstrap/Container";
-import Spinner from "react-bootstrap/Spinner";
+import React from 'react';
+import axios from 'axios';
+import { Formik } from 'formik';
+import Button from 'react-bootstrap/Button';
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
+import Container from 'react-bootstrap/Container';
+import Spinner from 'react-bootstrap/Spinner';
 
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
+
+import { onMessageListener } from './firebaseInit';
 
 export const Messaging = () => {
-  const [messages, setMessages] = React.useState([]);
-  const [requesting, setRequesting] = React.useState(false);
+  const [ messages, setMessages ] = React.useState([]);
+  const [ requesting, setRequesting ] = React.useState(false);
 
   React.useEffect(() => {
     setRequesting(true);
-    axios.get("/messages").then((resp) => {
+    axios.get('/messages').then((resp) => {
       setMessages(resp.data.messages);
       setRequesting(false);
     });
   }, []);
 
+  onMessageListener()
+    .then((payload) => {
+      const { title, body } = payload.data;
+      toast.info(`${title}; ${body}`);
+    })
+    .catch((err) => {
+      toast.error(JSON.stringify(err));
+    });
+
   return (
     <Container>
       <Formik
         initialValues={{
-          name: "",
-          message: "",
+          name: '',
+          message: '',
         }}
         onSubmit={(values, actions) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            actions.setSubmitting(false);
-            toast.success("Submitted succesfully");
-          }, 1000);
+          axios
+            .post('/messages', values)
+            .then((resp) => {
+              setMessages(resp.data.messages.concat(messages));
+              actions.setSubmitting(false);
+              toast.success('Submitted succesfully');
+            })
+            .catch((err) => {
+              console.log(err);
+              toast.error('There was an error saving the message');
+            });
         }}
       >
         {(prop) => {
@@ -46,7 +63,7 @@ export const Messaging = () => {
                 </InputGroup.Prepend>
                 <FormControl
                   placeholder="Enter your name"
-                  onChange={handleChange("name")}
+                  onChange={handleChange('name')}
                 />
               </InputGroup>
 
@@ -55,7 +72,7 @@ export const Messaging = () => {
                   <InputGroup.Text id="basic-addon1">Message</InputGroup.Text>
                 </InputGroup.Prepend>
                 <FormControl
-                  onChange={handleChange("message")}
+                  onChange={handleChange('message')}
                   placeholder="Enter a message"
                 />
               </InputGroup>
